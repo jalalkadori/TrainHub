@@ -1,6 +1,11 @@
 <?php 
 include("./db_connection.php");
 include("./session_config.php");
+
+if (isset($_GET['id'])) {
+  $id_formation = $_GET['id'];
+  echo "$id_formation";
+}
 ?>
 
 <!doctype html>
@@ -31,17 +36,14 @@ include("./session_config.php");
                 <a class="nav-link" href="./formation.php">Formations</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Services</a>
-              </li>
-              <li class="nav-item">
                 <a class="nav-link" href="#">Contact</a>
               </li>
             </ul>
             <div class="d-flex">
             <?php
-                  // Vérifier si l'utilisateur est connecté
-                  // Afficher les éléments du menu appropriés en fonction de la variable $connected
+                  // Vérifier si l'utilisateur est connecté 
                   if (isset($_SESSION['email'])) {
+                    // Afficher les éléments du menu appropriés
                       echo '
                       <div class="dropdown">
                         <button class="btn btn-danger dropdown-toggle text-uppercase" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -65,11 +67,9 @@ include("./session_config.php");
       </nav>
     </header>
 
-  
-     
     
-    
-    
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script> 
 </body>
-</html> 
+</html>

@@ -1,3 +1,8 @@
+<?php 
+include("./db_connection.php");
+// Start the session
+session_start();
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -35,6 +40,34 @@
       </nav>
     </header>
 
+    <?php 
+        $error_email = '';
+        if(isset($_POST['connecter'])) {
+
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+    
+            $apprenant_connection_request = "SELECT * FROM `apprenant` WHERE EMAIL_APPRENANT = '$email' AND MDP_APPRENANT = '$password'";
+            $apprenant_connection = $db_connection->prepare($apprenant_connection_request);
+            $apprenant_connection->execute();
+            $apprenant_connection_results = $apprenant_connection->fetch( PDO::FETCH_ASSOC );
+            $count = $apprenant_connection->rowCount();
+            if($count == 0) {
+                $error_email = 'Adresse email ou mot de pass incorect !!';
+            } else {
+                session_start();
+                $_SESSION['email'] = $apprenant_connection_results['EMAIL_APPRENANT'];
+                $_SESSION['password'] = $apprenant_connection_results['MDP_APPRENANT'];
+                $_SESSION['id_apprenant'] = $apprenant_connection_results['ID_APPRENANT'];
+                $_SESSION['full_name'] = $apprenant_connection_results['NOM_APPRENANT'];
+                $_SESSION['phone_number'] = $apprenant_connection_results['TELE_APPRENANT'];
+                header('Location: index.php');
+            }
+        }
+
+    ?>
+
+
     <section class="container my-5" id="slide">
       <div class="row">
         
@@ -43,20 +76,20 @@
         </div>
         <div class="col-md-6 d-flex flex-column justify-content-center align-items-start gap-5">
           <h1 class="slide-title">connectez-vous à votre compte</h1>
-            <form>
+            <form action="#" method="post">
                 <div class="row">
                     <div class="col mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                        <div id="emailHelp" class="form-text">Nous ne partagerons jamais votre e-mail avec quelqu'un d'autre    .</div>
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" name="email">
+                        <div class="form-text text-danger"><?= $error_email ?></div>
                     </div>
                     <div class="col mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Password</label>
-                        <input type="password" class="form-control w-100" id="exampleInputPassword1">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control w-100" name="password">
                     </div>
                 </div>
                     
-                <a href="#" class="btn-action" style="--c: #373B44;--b: 5px;--s:12px" type="submit">Connexion</a>
+                <button class="btn-action" style="--c: #373B44;--b: 5px;--s:12px" type="submit" name="connecter">Connexion</button>
             </form>          
         </div>
       </div>
@@ -64,15 +97,6 @@
 
 
 
-      
-    
-    
-    
-    
-    
-    
-    
-    
     
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js" integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js" integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ" crossorigin="anonymous"></script>
