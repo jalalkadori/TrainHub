@@ -72,7 +72,7 @@ session_start();
       <div class="row">
         
         <div class="col-md-6 py-5">
-          <img src="icons/slide1.png" alt="Image" class="img-fluid">  
+          <img src="./images/vectors/login.jpg" alt="Image" class="img-fluid">  
         </div>
         <div class="col-md-6 d-flex flex-column justify-content-center align-items-start gap-5">
           <h1 class="slide-title">connectez-vous à votre compte</h1>

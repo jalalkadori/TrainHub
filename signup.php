@@ -67,7 +67,7 @@ include("./db_connection.php");
         </div>
 
         <div class="col-md-6 py-5">
-          <img src="icons/slide1.png" alt="Image" class="img-fluid">  
+          <img src="./images/vectors/signup.png" alt="Image" class="img-fluid">  
         </div>
       </div>
     </section>

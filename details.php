@@ -67,6 +67,70 @@ if (isset($_GET['id'])) {
       </nav>
     </header>
 
+    <?php
+      $formation_list_request = "SELECT * FROM `formation` WHERE formation.ID_FORMATION = '$id_formation'";
+      $formation_list = $db_connection->prepare($formation_list_request);
+      $formation_list->execute();
+      
+      $row = $formation_list->fetch(PDO::FETCH_ASSOC);
+
+      
+    ?>
+
+    <section class="container my-5" >
+      <h1><?php echo "$row[SUJET_FORMATION]" ?></h1>
+      <p> Categorie de formation : <?php echo "$row[CATEGORIE_FORMATION]" ?>.</p>
+      <p> Horraire de formation : <?php echo "$row[HORRAIRE_FORMATION]" ?> H.</p>
+      <p> Description de formation : <?php echo "$row[DESCRIPTIVE_FORMATION]" ?></p>
+    </section>  
+
+    <section class="container my-5">
+      <h2>Sessions Programmées :</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Date de debut</th>
+            <th scope="col">Formateur affecté</th>
+            <th scope="col">Nombre d'inscrits</th>
+            <th scope="col">Places disponibles</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+            // recuperation des session de formation programmées avec les nom de formateur asigné
+              $session_list_request = "SELECT *, NOM_FORMATEUR, (SELECT COUNT(ID_INSCRIPTION) FROM `INSCRIPTION` where session.ID_SESSION = inscription.ID_SESSION) AS nombre_inscrits FROM `session` 
+              JOIN formateur ON session.ID_FORMATEUR = formateur.ID_FORMATEUR
+              WHERE session.ID_FORMATION = '$id_formation' AND session.DATE_DEBUT_SESSION > NOW() GROUP BY session.ID_SESSION";
+              
+              $session_list = $db_connection->prepare($session_list_request);
+              $session_list->execute();
+
+              // affichage des session programmées avec tt les information sur un table HTML
+              $number = 0;    
+              while($row = $session_list->fetch(PDO::FETCH_ASSOC)) {
+                $number++;
+                echo'
+                  <tr>
+                      <th scope="row">'.$number.'</th>
+                      <td>'.$row['DATE_DEBUT_SESSION'].'</td>
+                      <td>'.$row['NOM_FORMATEUR'].'</td>
+                      <td>'.$row['nombre_inscrits'].'</td>
+                      <td>'.($row['NOMBRE_PLACES_SESSION'] - $row['nombre_inscrits']).'</td>
+                      <td><button type="button" class="btn btn-danger">Rejoindre</button></td>
+                  </tr>
+                ';  
+              }
+
+          ?>    
+               
+        </tbody>
+      </table>
+    </section>
+
+
+
     
 
 
