@@ -14,7 +14,7 @@ session_start();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
   </head>
   <body>
-    <header>
+    <header class="sticky-top">
       <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
         <div class="container">
             <a class="navbar-brand" href="index.php">
@@ -33,7 +33,7 @@ session_start();
               </li>
             </ul>
             <div class="d-flex">
-                <a href="./signup.php" class="btn btn-primary" type="button">Sign up</a>
+                <a href="./signup.php" class="btn btn-danger" type="button">S'inscrire</a>
             </div>
           </div>
         </div>

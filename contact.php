@@ -18,7 +18,7 @@ session_start();
   </head>
   <body>
     <header class="sticky-top">
-      <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
+      <nav class="navbar navbar-expand-lg navbar-light bg-transparent ">
         <div class="container">
           <a class="navbar-brand" href="index.php">
             <img src="icons/logo.png" alt="Logo" width="200">
@@ -33,9 +33,6 @@ session_start();
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="./formation.php">Formations</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="contact.php">Contact</a>
               </li>
             </ul>
             <div class="d-flex">
@@ -70,132 +67,42 @@ session_start();
     <section class="container my-5" id="slide">
       <div class="row">
         <div class="col-md-6 d-flex flex-column justify-content-center align-items-start gap-5">
-          <h1 class="slide-title">Apprendre sans <br> limites</h1>
-          <p>Des cours interactifs de qualité avec des instructeurs expérimentés. Améliorez vos compétences et obtenez des certifications reconnues par l'industrie pour une carrière réussie.</p>
-          <a href="./formation.php" class="btn-action" style="--c: #373B44;--b: 5px;--s:12px">Rejoignez Gratuitement</a>
+          <h1 class="slide-title">Créer vote compte</h1>
+            <form method="post">
+                <div class="row row-cols-2">
+                    <div class="col mb-3">
+                        <label for="email" class="form-label">Nom Complet</label>
+                        <input type="text" class="form-control" name="fullName">
+                    </div>
+                    <div class="col mb-3">
+                        <label for="password" class="form-label">Adresse Email</label>
+                        <input type="email" class="form-control w-100" name="email">
+                    </div>
+                    <div class="col mb-3">
+                        <label for="phone" class="form-label">Numéro de Téléphone</label>
+                        <input type="phone" class="form-control w-100" name="phone" max="10">
+                    </div>
+                    <div class="col mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Mot de pass</label>
+                        <input type="password" class="form-control w-100" name="password">
+                    </div>
+                </div>
+                    
+                <button class="btn-action" style="--c: #373B44;--b: 5px;--s:12px" type="submit" name="creer">Créer</button>
+            </form>           
         </div>
+
         <div class="col-md-6 py-5">
-          <img src="icons/slide1.png" alt="Image" class="img-fluid">  
+          <img src="./images/vectors/signup.png" alt="Image" class="img-fluid">  
         </div>
       </div>
     </section>
 
-    <section class="container my-5" id="collabortions">
-      <h2 class="section-title text-center">Nos collaboratteurs</h2>
-      <div class="row">
-        <div class="col text-center">
-          <img src="./images/collaborators/google.png" alt="google logo" width="150" srcset="">
-        </div>
-        <div class="col text-center">
-          <img src="./images/collaborators/facebook.png" alt="google logo" width="100" srcset="">
-        </div>
-        <div class="col text-center">
-          <img src="./images/collaborators/intel.png" alt="google logo" width="100" srcset="">
-        </div>
-        
-      </div>
-    </section>
+    
 
-    <section class="container my-5">
-      <h2 class="section-title text-start">Lancez une nouvelle carrière en aussi peu que 6 mois</h2>
-      <div class="accordion accordion-flush" id="accordionFlushExample">
-        <div class="accordion-item">
-          <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-              Développeur web
-            </button>
-          </h2>
-          <div id="flush-collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionFlushExample">
-            <div class="accordion-body">
-              <div class="card my-3">
-                <div class="row g-0">
-                  <div class="col-md-4">
-                    <img src="./images/jobs/developpeur-web.jpeg" class="img-fluid rounded-start" alt="...">
-                  </div>
-                  <div class="col-md-8">
-                    <div class="card-body">
-                      <h5 class="card-title">Développeur web</h5>
-                      <p class="card-text">Le développeur web crée des applications et des sites web, collabore avec des designers, assure la maintenance et l'amélioration des sites existants. Il/elle doit comprendre les besoins des clients, être créatif, curieux et résoudre des problèmes. Compétences: HTML, CSS, JavaScript, PHP, Python, Ruby.</p>
-                      <a href="./formation.php" type="button" class="btn btn-danger">Explorer toutes les formations</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-              Développeur web
-            </button>
-          </h2>
-          <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-            <div class="accordion-body">
-              <div class="card my-3">
-                <div class="row g-0">
-                  <div class="col-md-4">
-                    <img src="./images/jobs/developpeur-web.jpeg" class="img-fluid rounded-start" alt="...">
-                  </div>
-                  <div class="col-md-8">
-                    <div class="card-body">
-                      <h5 class="card-title">Développeur web</h5>
-                      <p class="card-text">Le développeur web crée des applications et des sites web, collabore avec des designers, assure la maintenance et l'amélioration des sites existants. Il/elle doit comprendre les besoins des clients, être créatif, curieux et résoudre des problèmes. Compétences: HTML, CSS, JavaScript, PHP, Python, Ruby.</p>
-                      <a href="./formation.php" type="button" class="btn btn-danger">Explorer toutes les formations</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="accordion-item">
-          <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-              Développeur web
-            </button>
-          </h2>
-          <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-            <div class="accordion-body">
-              <div class="card my-3">
-                <div class="row g-0">
-                  <div class="col-md-4">
-                    <img src="./images/jobs/developpeur-web.jpeg" class="img-fluid rounded-start" alt="...">
-                  </div>
-                  <div class="col-md-8">
-                    <div class="card-body">
-                      <h5 class="card-title">Développeur web</h5>
-                      <p class="card-text">Le développeur web crée des applications et des sites web, collabore avec des designers, assure la maintenance et l'amélioration des sites existants. Il/elle doit comprendre les besoins des clients, être créatif, curieux et résoudre des problèmes. Compétences: HTML, CSS, JavaScript, PHP, Python, Ruby.</p>
-                      <a href="./formation.php" type="button" class="btn btn-danger">Explorer toutes les formations</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-        </div>
-      </div>
-    </section>
+  
 
-    <section class="container my-5">
-      
-    </section>
-
-    <section class="py-4 py-xl-5">
-      <div class="container">
-          <div class="text-white bg-dark border rounded border-0 border-light d-flex flex-column justify-content-between align-items-center flex-lg-row p-4 p-lg-5">
-              <div class="text-center text-lg-start py-3 py-lg-1">
-                  <h2 class="fw-bold mb-2"><strong>Abonnez-vous à notre newsletter.</strong></h2>
-                  <p class="mb-0">Imperdiet consectetur dolor.</p>
-              </div>
-              <form class="d-flex justify-content-center flex-wrap my-2" method="post">
-                  <div class="my-2"><input class="form-control" type="email" name="email" placeholder="Votre adresse e-mail." /></div>
-                  <div class="my-2"><button class="btn btn-primary ms-sm-2" type="submit">S'abonner</button></div>
-              </form>
-          </div>
-      </div>
-    </section>
-
-    <footer class="text-center bg-dark">
+    <footer class="text-center bg-dark sticky-bottom">
         <div class="container text-white py-4 py-lg-5">
             <ul class="list-inline">
                 <li class="list-inline-item me-4"><a class="link-light" href="index.php">Accueil</a></li>

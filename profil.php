@@ -1,6 +1,8 @@
 <?php 
 include("./db_connection.php");
 include("./session_config.php");
+
+$id_apprenant = $_SESSION['id_apprenant'];
 ?>
 
 <!doctype html>
@@ -13,7 +15,7 @@ include("./session_config.php");
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js" integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE" crossorigin="anonymous"></script>
   </head>
   <body>
-    <header>
+    <header class="sticky-top">
       <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
         <div class="container">
           <a class="navbar-brand" href="index.php">
@@ -29,9 +31,6 @@ include("./session_config.php");
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="./formation.php">Formations</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Services</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">Contact</a>
@@ -64,6 +63,53 @@ include("./session_config.php");
         </div>
       </nav>
     </header>
+
+    <section class="container my-5">
+      <div class="row">
+        <div class="col-md-6 d-flex flex-column justify-content-center align-items-start gap-5">
+          <h1 class="slide-title">Bienvenue sur votre compte</h1>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="container my-5">
+      <h2>Mes informations personnelles</h2>
+      <table class="table table-success table-striped table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Nom Complet</th>
+            <th scope="col">Adresse Email</th>
+            <th scope="col">Numero de téléphone</th>
+            <th scope="col">Mot de pass</th>
+            <th scope="col">Mettre à jour Mes infos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+              <?php
+                $sql = "SELECT * FROM `apprenant` WHERE ID_APPRENANT = '$id_apprenant'";
+                $stms = $db_connection->prepare($sql);
+                $stms->execute();
+
+
+                $row = $stms->fetch(PDO::FETCH_ASSOC);
+              
+              
+              
+              ?>
+
+
+            <td><?php echo $row['NOM_APPRENANT']?></td>
+            <td><?php echo $row['EMAIL_APPRENANT']?></td>
+            <td>0<?php echo $row['TELE_APPRENANT']?></td>
+            <td><?php echo $row['MDP_APPRENANT']?></td>
+            <td><button class="btn btn-danger">Modifier</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+    </section>
 
   
      
