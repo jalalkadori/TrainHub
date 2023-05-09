@@ -74,7 +74,9 @@ $id_apprenant = $_SESSION['id_apprenant'];
 
 
     <section class="container my-5">
-      <h2>Mes informations personnelles</h2>
+      <h2>Mes informations personnelles :</h2>
+      <hr class="border border-danger border-2 opacity-50">
+
       <table class="table table-success table-striped table-hover">
         <thead>
           <tr>
@@ -91,15 +93,8 @@ $id_apprenant = $_SESSION['id_apprenant'];
                 $sql = "SELECT * FROM `apprenant` WHERE ID_APPRENANT = '$id_apprenant'";
                 $stms = $db_connection->prepare($sql);
                 $stms->execute();
-
-
                 $row = $stms->fetch(PDO::FETCH_ASSOC);
-              
-              
-              
               ?>
-
-
             <td><?php echo $row['NOM_APPRENANT']?></td>
             <td><?php echo $row['EMAIL_APPRENANT']?></td>
             <td>0<?php echo $row['TELE_APPRENANT']?></td>
@@ -109,6 +104,116 @@ $id_apprenant = $_SESSION['id_apprenant'];
         </tbody>
       </table>
 
+    </section>
+
+    <section class="container my-5">
+      <h2>Mes Inscriptions : </h2>
+      <hr class="border border-danger border-2 opacity-50">
+
+      <h4 class="text-center my-3">Formations à venir</h4>
+      <table class="table table-success table-striped table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Sujet de Formation</th>
+            <th scope="col">Formateur</th>
+            <th scope="col">Date de debut</th>
+            <th scope="col">Date de Fin</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+              <?php
+                $sql = "SELECT *, f.SUJET_FORMATION, fo.NOM_FORMATEUR FROM inscription i
+                JOIN session s on s.ID_SESSION = i.ID_SESSION
+                JOIN formation f on f.ID_FORMATION = S.ID_FORMATION
+                JOIN formateur fo on fo.ID_FORMATEUR = S.ID_FORMATEUR
+                WHERE ID_APPRENANT = '$id_apprenant' AND s.DATE_DEBUT_SESSION > NOW()";
+                $stms = $db_connection->prepare($sql);
+                $stms->execute();
+
+                while($row = $stms->fetch(PDO::FETCH_ASSOC)) {
+                  echo "
+                    <tr>
+                      <td>".$row['SUJET_FORMATION']."</td>
+                      <td>".$row['NOM_FORMATEUR']."</td>
+                      <td>".$row['DATE_DEBUT_SESSION']."</td>
+                      <td>".$row['DATE_FIN_SESSION']."</td>
+                    </tr>
+                  ";
+                }
+              ?>
+          
+        </tbody>
+      </table>
+
+      <h4 class="text-center my-3">Formations en cours</h4>
+      <table class="table table-success table-striped table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Sujet de Formation</th>
+            <th scope="col">Formateur</th>
+            <th scope="col">Date de debut</th>
+            <th scope="col">Date de Fin</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+              <?php
+                $sql = "SELECT *, f.SUJET_FORMATION, fo.NOM_FORMATEUR FROM inscription i JOIN session s on s.ID_SESSION = i.ID_SESSION JOIN formation f on f.ID_FORMATION = S.ID_FORMATION JOIN formateur fo on fo.ID_FORMATEUR = S.ID_FORMATEUR WHERE ID_APPRENANT = '$id_apprenant' AND s.DATE_FIN_SESSION > NOW() AND s.DATE_DEBUT_SESSION < NOW()";
+                $stms = $db_connection->prepare($sql);
+                $stms->execute();
+
+                while($row = $stms->fetch(PDO::FETCH_ASSOC)) {
+                  echo "
+                    <tr>
+                      <td>".$row['SUJET_FORMATION']."</td>
+                      <td>".$row['NOM_FORMATEUR']."</td>
+                      <td>".$row['DATE_DEBUT_SESSION']."</td>
+                      <td>".$row['DATE_FIN_SESSION']."</td>
+                    </tr>
+                  ";
+                }
+              ?>
+          
+        </tbody>
+      </table>
+
+
+      <h4 class="text-center my-3">Historique des formations passées</h4>
+      <table class="table table-success table-striped table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Sujet de Formation</th>
+            <th scope="col">Formateur</th>
+            <th scope="col">Date de debut</th>
+            <th scope="col">Date de Fin</th>
+            <th scope="col">Validation</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+              <?php
+                $sql = "SELECT *, f.SUJET_FORMATION, fo.NOM_FORMATEUR FROM inscription i JOIN session s on s.ID_SESSION = i.ID_SESSION JOIN formation f on f.ID_FORMATION = S.ID_FORMATION JOIN formateur fo on fo.ID_FORMATEUR = S.ID_FORMATEUR WHERE ID_APPRENANT = '$id_apprenant' AND s.DATE_FIN_SESSION < NOW()";
+                $stms = $db_connection->prepare($sql);
+                $stms->execute();
+
+                while($row = $stms->fetch(PDO::FETCH_ASSOC)) {
+                  echo "
+                    <tr>
+                      <td>".$row['SUJET_FORMATION']."</td>
+                      <td>".$row['NOM_FORMATEUR']."</td>
+                      <td>".$row['DATE_DEBUT_SESSION']."</td>
+                      <td>".$row['DATE_FIN_SESSION']."</td>
+                      <td>".$row['VALIDATION']."</td>
+                    </tr>
+                  ";
+                }
+              ?>
+          
+        </tbody>
+      </table>
+
+                
     </section>
 
   

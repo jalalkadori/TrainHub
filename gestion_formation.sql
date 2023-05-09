@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 08, 2023 at 10:34 PM
+-- Generation Time: May 09, 2023 at 03:28 PM
 -- Server version: 8.0.31
 -- PHP Version: 8.0.26
 
@@ -184,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `inscription` (
   PRIMARY KEY (`ID_INSCRIPTION`),
   KEY `FK_INSCRIPT_SINSCRIRE_APPRENAN` (`ID_APPRENANT`),
   KEY `FK_INSCRIPT_SINSCRIRE_SESSION` (`ID_SESSION`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Dumping data for table `inscription`
@@ -209,7 +209,10 @@ INSERT INTO `inscription` (`ID_INSCRIPTION`, `ID_APPRENANT`, `ID_SESSION`, `VALI
 (17, 28, 1, NULL),
 (18, 29, 1, NULL),
 (19, 60, 2, NULL),
-(20, 45, 2, NULL);
+(20, 45, 2, NULL),
+(22, 1, 8, NULL),
+(23, 68, 4, 'NON'),
+(36, 68, 2, NULL);
 
 -- --------------------------------------------------------
 
@@ -229,7 +232,7 @@ CREATE TABLE IF NOT EXISTS `session` (
   PRIMARY KEY (`ID_SESSION`),
   KEY `FK_SESSION_AFFECTER_FORMATEU` (`ID_FORMATEUR`),
   KEY `FK_SESSION_CONCERNE_FORMATIO` (`ID_FORMATION`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Dumping data for table `session`
@@ -240,7 +243,9 @@ INSERT INTO `session` (`ID_SESSION`, `ID_FORMATEUR`, `ID_FORMATION`, `DATE_DEBUT
 (2, 2, 5, '2023-06-04', '2023-07-04', 12, 'en cours d\'inscription'),
 (3, 1, 6, '2023-04-02', '2023-05-13', 20, 'en cours'),
 (4, 1, 7, '2023-02-01', '2023-02-28', 15, 'cloturée'),
-(7, 2, 3, '2023-01-01', '2023-01-31', 10, 'annulée');
+(7, 2, 3, '2023-01-01', '2023-01-31', 10, 'annulée'),
+(8, 1, 6, '2023-07-01', '2023-08-31', 20, 'en cours d\'inscription'),
+(9, 1, 6, '2023-09-01', '2023-09-30', 10, 'en cours d\'inscription');
 
 --
 -- Constraints for dumped tables

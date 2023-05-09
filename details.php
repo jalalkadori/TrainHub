@@ -4,8 +4,9 @@ include("./session_config.php");
 
 if (isset($_GET['id'])) {
   $id_formation = $_GET['id'];
-  echo "$id_formation";
 }
+$id_apprenant = $_SESSION['id_apprenant'];
+
 ?>
 
 <!doctype html>
@@ -18,7 +19,7 @@ if (isset($_GET['id'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js" integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE" crossorigin="anonymous"></script>
   </head>
   <body>
-    <header class="sticky-top>
+  <header class="sticky-top">
       <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
         <div class="container">
           <a class="navbar-brand" href="index.php">
@@ -41,9 +42,9 @@ if (isset($_GET['id'])) {
             </ul>
             <div class="d-flex">
             <?php
-                  // Vérifier si l'utilisateur est connecté 
+                  // Vérifier si l'utilisateur est connecté
+                  // Afficher les éléments du menu appropriés en fonction de la variable $connected
                   if (isset($_SESSION['email'])) {
-                    // Afficher les éléments du menu appropriés
                       echo '
                       <div class="dropdown">
                         <button class="btn btn-danger dropdown-toggle text-uppercase" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -118,9 +119,58 @@ if (isset($_GET['id'])) {
                       <td>'.$row['NOM_FORMATEUR'].'</td>
                       <td>'.$row['nombre_inscrits'].'</td>
                       <td>'.($row['NOMBRE_PLACES_SESSION'] - $row['nombre_inscrits']).'</td>
-                      <td><button type="button" class="btn btn-danger">Rejoindre</button></td>
+                      <td>
+                        <form method="post">
+                          <input type="hidden" value="'.$row['ID_SESSION'].'" name="idSession">
+                          <button class="btn btn-danger" name="rejoindre">Rejoindre</button>
+                        </form>
+                      </td>
                   </tr>
                 ';  
+              }
+
+              if(isset($_POST['rejoindre'])) {
+                $id_session = $_POST['idSession']; // selected session
+                  // number of actif sessions in the current year
+                  $session_number_request = "SELECT COUNT(*) FROM `inscription` I
+                  JOIN session S on S.ID_SESSION = I.ID_SESSION
+                  WHERE YEAR(S.DATE_FIN_SESSION) = YEAR(CURDATE()) AND I.ID_APPRENANT = $id_apprenant";
+                  $session_number = $db_connection->prepare($session_number_request);
+                  $session_number->execute();
+
+                  $session_count = $session_number->fetchColumn();
+
+                  // overlaped sessions 
+                  $overlaped_session_request = "SELECT * FROM `SESSION` WHERE DATE_DEBUT_SESSION > NOW() AND (DATE_FIN_SESSION < (SELECT DATE_DEBUT_SESSION FROM SESSION where ID_SESSION = '$id_session') OR DATE_DEBUT_SESSION > (SELECT DATE_FIN_SESSION FROM SESSION WHERE ID_SESSION = '$id_session'))";
+                  $overlaped_session = $db_connection->prepare($overlaped_session_request);
+                  $overlaped_session->execute();
+
+
+                  if($session_count >= 2) {
+                    echo "<div class='alert alert-danger'>";
+                      echo "<ul>";
+                        echo "<li>Vous avez atteint 2 sessions de formation cette année</li>";
+                      echo "</ul>";
+                    echo "</div>";
+
+                  } else {
+                    // insert and display a success message 
+                    $inscription_insert_request = "INSERT INTO `inscription` VALUES (NULL, '$id_apprenant', '$id_session', NULL)";
+                    $inscription_insert = $db_connection->prepare($inscription_insert_request);
+                    $inscription_insert->execute();
+                    
+                    echo "<div class='alert alert-success'>";
+                      echo "<ul>";
+                        echo "<li>Félicitations! Votre inscription à la session en ligne a été un succès. Pour accéder à votre profil, veuillez cliquer sur le lien suivant : <a href='./profil.php' class='link-underline-warning'>Page profil</a></li>";
+                      echo "</ul>";
+                    echo "</div>";
+                    
+
+                  }
+
+
+
+                
               }
 
           ?>    
