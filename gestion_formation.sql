@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 09, 2023 at 03:28 PM
+-- Generation Time: May 10, 2023 at 12:48 PM
 -- Server version: 8.0.31
 -- PHP Version: 8.0.26
 
@@ -184,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `inscription` (
   PRIMARY KEY (`ID_INSCRIPTION`),
   KEY `FK_INSCRIPT_SINSCRIRE_APPRENAN` (`ID_APPRENANT`),
   KEY `FK_INSCRIPT_SINSCRIRE_SESSION` (`ID_SESSION`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 --
 -- Dumping data for table `inscription`
@@ -211,8 +211,8 @@ INSERT INTO `inscription` (`ID_INSCRIPTION`, `ID_APPRENANT`, `ID_SESSION`, `VALI
 (19, 60, 2, NULL),
 (20, 45, 2, NULL),
 (22, 1, 8, NULL),
-(23, 68, 4, 'NON'),
-(36, 68, 2, NULL);
+(36, 68, 2, NULL),
+(40, 68, 9, NULL);
 
 -- --------------------------------------------------------
 
