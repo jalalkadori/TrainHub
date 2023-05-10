@@ -18,7 +18,7 @@ session_start();
   </head>
   <body>
     <header class="sticky-top">
-      <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
           <a class="navbar-brand" href="index.php">
             <img src="icons/logo.png" alt="Logo" width="200">

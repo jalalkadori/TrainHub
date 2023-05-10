@@ -20,7 +20,7 @@ $id_apprenant = $_SESSION['id_apprenant'];
   </head>
   <body>
   <header class="sticky-top">
-      <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
           <a class="navbar-brand" href="index.php">
             <img src="icons/logo.png" alt="Logo" width="200">
@@ -108,7 +108,7 @@ $id_apprenant = $_SESSION['id_apprenant'];
               $session_list = $db_connection->prepare($session_list_request);
               $session_list->execute();
 
-              // affichage des session programmées avec tt les information sur un table HTML
+              // Display a disabled button in case of there no more places 
               $number = 0;    
               while($row = $session_list->fetch(PDO::FETCH_ASSOC)) {
                 $number++;
@@ -122,7 +122,7 @@ $id_apprenant = $_SESSION['id_apprenant'];
                       <td>
                         <form method="post">
                           <input type="hidden" value="'.$row['ID_SESSION'].'" name="idSession">
-                          <button class="btn btn-danger" name="rejoindre">Rejoindre</button>
+                          <button class="btn btn-danger '.($row['NOMBRE_PLACES_SESSION'] == $row['nombre_inscrits'] ? 'disabled' : '').'" name="rejoindre">Rejoindre</button>
                         </form>
                       </td>
                   </tr>
@@ -141,9 +141,15 @@ $id_apprenant = $_SESSION['id_apprenant'];
                   $session_count = $session_number->fetchColumn();
 
                   // overlaped sessions 
-                  $overlaped_session_request = "SELECT * FROM `SESSION` WHERE DATE_DEBUT_SESSION > NOW() AND (DATE_FIN_SESSION < (SELECT DATE_DEBUT_SESSION FROM SESSION where ID_SESSION = '$id_session') OR DATE_DEBUT_SESSION > (SELECT DATE_FIN_SESSION FROM SESSION WHERE ID_SESSION = '$id_session'))";
+                  $overlaped_session_request = "SELECT * FROM `SESSION` S 
+                  JOIN inscription I ON I.ID_SESSION = S.ID_SESSION
+                  WHERE I.ID_APPRENANT = '$id_apprenant' AND S.ID_SESSION <> '$id_session'
+                  AND (S.DATE_FIN_SESSION < (SELECT DATE_DEBUT_SESSION FROM session WHERE ID_SESSION = '$id_session') OR S.DATE_DEBUT_SESSION > (SELECT DATE_FIN_SESSION FROM session WHERE ID_SESSION = '$id_session'))";
                   $overlaped_session = $db_connection->prepare($overlaped_session_request);
                   $overlaped_session->execute();
+
+                  $overlaped_session_rows = $overlaped_session->fetchAll(PDO::FETCH_ASSOC);
+                  $overlaped_session_rows_count = count($overlaped_session_rows);
 
 
                   if($session_count >= 2) {
@@ -153,6 +159,12 @@ $id_apprenant = $_SESSION['id_apprenant'];
                       echo "</ul>";
                     echo "</div>";
 
+                  } elseif ($session_count == 1 AND $overlaped_session_rows_count == 0) {
+                    echo "<div class='alert alert-danger'>";
+                      echo "<ul>";
+                        echo "<li>La session sélectionnée chevauche avec votre session actuelle.</li>";
+                      echo "</ul>";
+                    echo "</div>";
                   } else {
                     // insert and display a success message 
                     $inscription_insert_request = "INSERT INTO `inscription` VALUES (NULL, '$id_apprenant', '$id_session', NULL)";
