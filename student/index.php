@@ -174,6 +174,7 @@ session_start();
             </div>
         </div>
       </div>
+    </div>
     </section>
 
     <section class="container my-5">
