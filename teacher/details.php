@@ -3,6 +3,9 @@ include("./db_connection.php");
 include("./session_config.php");
 
 $idFormateur = $_SESSION['id_formateur'];
+if (isset($_GET['id'])) {
+    $id_formation = $_GET['id'];
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -57,76 +60,23 @@ $idFormateur = $_SESSION['id_formateur'];
       </nav>
     </header>
 
-    <?php 
-        $formation_categorie_query = "SELECT ID_FORMATION, CATEGORIE_FORMATION FROM `formation` GROUP BY CATEGORIE_FORMATION";
-        $formation_categorie = $db_connection->prepare($formation_categorie_query);
-        $formation_categorie->execute();
-      ?>            
+    <?php
+      $formation_list_request = "SELECT * FROM `formation` WHERE formation.ID_FORMATION = '$id_formation'";
+      $formation_list = $db_connection->prepare($formation_list_request);
+      $formation_list->execute();
+      
+      $row = $formation_list->fetch(PDO::FETCH_ASSOC);
 
+      
+    ?>
 
-    <section class="container my-5" id="filter">
-      <h2 class="section-title">List des formations Creés :</h2>
-      <form class="row my-5" method="post">
-        <div class="col-sm-4">
-          <label for="title" class="form-label">Sujet de Formations :</label>
-          <input type="text" class="form-control" id="title" name="title">
-        </div>
-        <div class="col-sm-4">
-          <label for="categorie" class="form-label">Categorie de Formation :</label>
-          <select class="form-select" name="categorie">
-            <option></option>
-            <?php     
-              while($row = $formation_categorie->fetch(PDO::FETCH_ASSOC)) {
-                echo '<option value="'.$row['CATEGORIE_FORMATION'].'">'.$row['CATEGORIE_FORMATION'].'</option>';
-              }
-            ?> 
-          </select>
-        </div>
-        <div class="col-sm-4 d-flex align-items-end">
-          <button type="submit" class="btn btn-primary w-100" name="chercher">Chercher</button>
-        </div>
-      </form>
-    </section>
-      <?php 
-        $formation_list_request = "SELECT * FROM `formation` WHERE formation.ID_FORMATION > 0 ";
+    <section class="container my-5" >
+      <h1><?php echo "$row[SUJET_FORMATION]" ?></h1>
+      <p> Categorie de formation : <?php echo "$row[CATEGORIE_FORMATION]" ?>.</p>
+      <p> Horraire de formation : <?php echo "$row[HORRAIRE_FORMATION]" ?> H.</p>
+      <p> Description de formation : <?php echo "$row[DESCRIPTIVE_FORMATION]" ?></p>
+    </section>  
 
-        if(isset($_POST['chercher'])) {
-          $title = $_POST["title"];
-          $categorie_formation = $_POST["categorie"];
-
-          if(!empty($title)) {
-              $formation_list_request.=" AND formation.SUJET_FORMATION LIKE '%$title%'";
-          } 
-          if(!empty($categorie_formation)) {
-              $formation_list_request.=" AND formation.CATEGORIE_FORMATION LIKE '$categorie_formation'";
-          }
-       
-        } 
-
-
-      ?>               
-    <section class="container my-5" id="formation-list">
-      <div class="row">
-        <?php 
-          $formation_list = $db_connection->prepare($formation_list_request);
-          $formation_list->execute();       
-          while($row = $formation_list->fetch(PDO::FETCH_ASSOC)) {
-            echo'
-            <div class="col-sm-6 col-md-3 mb-3">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">'.$row['SUJET_FORMATION'].'</h5>
-                  <p class="card-text text-botd">'.$row['HORRAIRE_FORMATION'].' H</p>
-                  <p class="card-text">'.$row['CATEGORIE_FORMATION'].'</p>
-                  <a href="details.php?id='.$row['ID_FORMATION'].'" class="btn btn-danger">Plus de détailes</a>
-                </div>
-              </div>
-            </div>';
-          }
-
-        ?>    
-      </div>
-    </section>
     
     
 

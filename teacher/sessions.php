@@ -74,26 +74,23 @@ $idFormateur = $_SESSION['id_formateur'];
     </header>
 
     <section class="container my-5">
-      <div class="row">
-        <div class="col">
-          <h2 class="">Vous trouverez vos sessions attribuées avec la liste de tous les étudiants inscrits.</h2>
+      <div class="row ">
+        <div class="col text-center">
+          <img src="./images/vectors/session.jpg" alt="" srcset="" class="img-fluid w-50">
+          <h2 class="my-3">Vous trouverez vos sessions attribuées avec la liste de tous les étudiants inscrits.</h2>
         </div>
       </div>
       <hr class="border border-danger border-2 opacity-50">
     </section>
     <?php
-        // session asigned list 
-        $formateurSessionsListQuery = "SELECT F.NOM_FORMATEUR, S.*, FO.SUJET_FORMATION FROM `formateur` F
-        JOIN session S on F.ID_FORMATEUR = S.ID_FORMATEUR
-        JOIN formation FO ON FO.ID_FORMATION = S.ID_FORMATION
-        WHERE F.ID_FORMATEUR = '$idFormateur'";
-        $formateurSessionsList = $db_connection->prepare($formateurSessionsListQuery);
-        $formateurSessionsList->execute();
+    // Session assigned list
+    $formateurSessionsListQuery = "SELECT F.NOM_FORMATEUR, S.*, FO.SUJET_FORMATION FROM `formateur` F
+    JOIN session S on F.ID_FORMATEUR = S.ID_FORMATEUR
+    JOIN formation FO ON FO.ID_FORMATION = S.ID_FORMATION
+    WHERE F.ID_FORMATEUR = '$idFormateur'";
+    $formateurSessionsList = $db_connection->prepare($formateurSessionsListQuery);
+    $formateurSessionsList->execute();
 
-
-        // $formateurSessionsList->closeCursor();
-     
-        
     ?>
 
     <section class="container my-5">
@@ -101,89 +98,83 @@ $idFormateur = $_SESSION['id_formateur'];
             <thead>
                 <tr>
                     <th scope="col" class="text-center">ID</th>
-                    <th scope="col">Formation content</th>
+                    <th scope="col">Détailles de Session</th>
                 </tr>
             </thead>
             <tbody>
-            <?php
+              <?php
                 $counter = 0;
-                while($row = $formateurSessionsList->fetch(PDO::FETCH_ASSOC)) {
-                    $id = $row['ID_SESSION'];
+                $idSessions = array(); // Store session IDs in an array
+                
+                while ($row = $formateurSessionsList->fetch(PDO::FETCH_ASSOC)) {
+                    $idSession = $row['ID_SESSION'];
+                    array_push($idSessions, $idSession); // Add the session ID to the array
                     $counter++;
-                echo '
+                ?>
                     <tr>
-                        <th scope="row" class="col-1 text-center">'.$row['ID_SESSION'].'</th>
+                        <th scope="row" class="col-1 text-center"><?= $row['ID_SESSION'] ?></th>
                         <td class="col-11">
                             <div class="accordion accordion-flush" id="accordion">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header fw-bold">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse'.$counter.'" aria-expanded="false" aria-controls="flush-collapse'.$counter.'">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#flush-collapse<?= $counter ?>" aria-expanded="false"
+                                            aria-controls="flush-collapse<?= $counter ?>">
                                             <div class="row d-flex justify-centent-between w-100">
-                                                <div class="col">Sujet : '.$row['SUJET_FORMATION'].'</div>
-                                                <div class="col">Date de Debut : '.$row['DATE_DEBUT_SESSION'].'</div>
-                                                <div class="col">Date de Fin : '.$row['DATE_FIN_SESSION'].'</div>
+                                                <div class="col">Sujet : <?= $row['SUJET_FORMATION'] ?></div>
+                                                <div class="col">Date de Debut : <?= $row['DATE_DEBUT_SESSION'] ?></div>
+                                                <div class="col">Date de Fin : <?= $row['DATE_FIN_SESSION'] ?></div>
                                             </div>
                                         </button>
                                     </h2>
-                                <div id="flush-collapse'.$counter.'" class="accordion-collapse collapse" data-bs-parent="#accordion">
-                                    <div class="accordion-body">
-                                        <h4>List des Apprenant inscrits :</h4>
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">ID Inscription</th>
-                                                    <th scope="col">ID Apprenant</th>
-                                                    <th scope="col">Nom et Prénom</th>
-                                                    <th scope="col">Email</th>
-                                                    <th scope="col">Validation</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <th scope="row">1</th>
-                                                    <td>Mark</td>
-                                                    <td>Otto</td>
-                                                    <td>@mdo</td>
-                                                    <td>Oui</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    <div id="flush-collapse<?= $counter ?>" class="accordion-collapse collapse"
+                                        data-bs-parent="#accordion">
+                                        <div class="accordion-body">
+                                            <h4>List des Apprenant inscrits :</h4>
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">ID Inscription</th>
+                                                        <th scope="col">ID Apprenant</th>
+                                                        <th scope="col">Nom et Prénom</th>
+                                                        <th scope="col">Validation</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php                                               
+                                                          // Student list for the current session
+                                                          $idSessionsString = implode(",", $idSessions); // convert the array to a string to use it inside the query 
+                                                          $studentListQuery = "SELECT * FROM inscription
+                                                          JOIN session ON session.ID_SESSION = inscription.ID_SESSION
+                                                          JOIN apprenant ON apprenant.ID_APPRENANT = inscription.ID_APPRENANT
+                                                          WHERE session.ID_SESSION = $idSessionsString";
+                                                          $studentList = $db_connection->prepare($studentListQuery);
+                                                          $studentList->execute();
+                              
+                                                        while ($studentRow = $studentList->fetch(PDO::FETCH_ASSOC)) {
+                                                    ?>
+                                                            <tr>
+                                                                <td><?= $studentRow['ID_INSCRIPTION'] ?></td>
+                                                                <td><?= $studentRow['ID_APPRENANT'] ?></td>
+                                                                <td><?= $studentRow['NOM_APPRENANT'] ?></td>
+                                                                <td><?= $studentRow['VALIDATION'] ?></td>
+                                                            </tr>
+                                                    <?php
+                                                        
+                                                        }
+                                                    ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
                                 </div>
                             </div>
                         </td>
                     </tr>
-                ';}
-
-                   // student list for every session
-                $studentListQuery = "SELECT F.NOM_FORMATEUR, S.*, I.*, A.NOM_APPRENANT FROM `formateur` F
-                JOIN session S on F.ID_FORMATEUR = S.ID_FORMATEUR
-                JOIN inscription I ON I.ID_SESSION = S.ID_FORMATION
-                JOIN apprenant A ON A.ID_APPRENANT = I.ID_APPRENANT
-                WHERE F.ID_FORMATEUR = '$idFormateur' AND S.ID_SESSION = 1";
-                $studentList = $db_connection->prepare($studentListQuery);
-                $studentList->execute();
-
-                    
-                function generateHTMLFromArray($array) {
-                    $html = '';
-                    
-                        while ($row = $array->fetch(PDO::FETCH_ASSOC)) {
-                            $html .= '<tr>';
-                            $html .= '<th scope="row">' . $row['id'] . '</th>';
-                            $html .= '<td>' . $row['name'] . '</td>';
-                            $html .= '<td>' . $row['surname'] . '</td>';
-                            $html .= '<td>' . $row['email'] . '</td>';
-                            $html .= '<td>' . $row['status'] . '</td>';
-                            $html .= '</tr>';
-                        }
-                    
-                    return $html;
+                <?php
+                  $removedElement = array_shift($idSessions); // Remove the first element of the array
                 }
-                
-                
-            ?>
+                ?>
             </tbody>
         </table>
     </section>

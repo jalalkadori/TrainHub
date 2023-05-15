@@ -96,7 +96,7 @@ $idFormateur = $_SESSION['id_formateur'];
                     [
                         'title' => 'Formations',
                         'image' => './images/vectors/formation.jpg',
-                        'link' => './sessions.php'
+                        'link' => './formations.php'
                     ],
                     [
                         'title' => 'Apprenants',
