@@ -1,8 +1,8 @@
 <?php 
-include("./db_connection.php");
-include("./session_config.php");
+  include("./db_connection.php");
+  include("./session_config.php");
 
-$idFormateur = $_SESSION['id_formateur'];
+  $idFormateur = $_SESSION['id_formateur'];
 ?>
 <style>
 /* adding an animation to the cards on dashboard page */

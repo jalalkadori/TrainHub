@@ -83,14 +83,47 @@ $idFormateur = $_SESSION['id_formateur'];
       <hr class="border border-danger border-2 opacity-50">
     </section>
     <?php
-    // Session assigned list
-    $formateurSessionsListQuery = "SELECT F.NOM_FORMATEUR, S.*, FO.SUJET_FORMATION FROM `formateur` F
-    JOIN session S on F.ID_FORMATEUR = S.ID_FORMATEUR
-    JOIN formation FO ON FO.ID_FORMATION = S.ID_FORMATION
-    WHERE F.ID_FORMATEUR = '$idFormateur'";
-    $formateurSessionsList = $db_connection->prepare($formateurSessionsListQuery);
-    $formateurSessionsList->execute();
+      // Session assigned list
+      $formateurSessionsListQuery = "SELECT F.NOM_FORMATEUR, S.*, FO.SUJET_FORMATION FROM `formateur` F
+      JOIN session S on F.ID_FORMATEUR = S.ID_FORMATEUR
+      JOIN formation FO ON FO.ID_FORMATION = S.ID_FORMATION
+      WHERE F.ID_FORMATEUR = '$idFormateur' ORDER BY S.DATE_FIN_SESSION DESC";
+      $formateurSessionsList = $db_connection->prepare($formateurSessionsListQuery);
+      $formateurSessionsList->execute();
+        
 
+        // Check if a success message and inscription ID exist in the query parameters
+        if (isset($_GET['message']) && isset($_GET['inscriptionId'])) {
+          $id_inscription = $_GET['inscriptionId'];
+          $message = $_GET['message'];
+
+          $ApprenantSessionValidationQuery = "SELECT * FROM `inscription` I
+          JOIN apprenant A ON A.ID_APPRENANT = I.ID_APPRENANT
+          JOIN Session S ON S.ID_SESSION = I.ID_SESSION
+          JOIN formation F ON F.ID_FORMATION = S.ID_FORMATION
+          WHERE I.ID_INSCRIPTION = '$id_inscription'";
+          $ApprenantSessionValidation = $db_connection->prepare($ApprenantSessionValidationQuery);
+          $ApprenantSessionValidation->execute();
+          $validatedSession = $ApprenantSessionValidation->fetch(PDO::FETCH_ASSOC);
+            if($message === "oui") {
+              echo "<div class='alert alert-success'>";
+              echo "<ul>";
+              echo "<li>Parfait !</li>";
+              echo "<li>L'apprenant " . $validatedSession['NOM_APPRENANT'] . " a bien validé la session " . $validatedSession['SUJET_FORMATION'] . "</li>";
+              echo "</ul>";
+              echo "</div>";
+            } else {
+              echo "<div class='alert alert-danger'>";
+              echo "<ul>";
+              echo "<li>Malheureusement !</li>";
+              echo "<li>L'apprenant : " . $validatedSession['NOM_APPRENANT'] . " n'a pas validé la session : 
+              " . $validatedSession['SUJET_FORMATION'] . " terminée le " . $validatedSession['DATE_FIN_SESSION'] . "</li>";
+              echo "</ul>";
+              echo "</div>";
+            }
+
+          
+        }
     ?>
 
     <section class="container my-5">
@@ -105,6 +138,7 @@ $idFormateur = $_SESSION['id_formateur'];
               <?php
                 $counter = 0;
                 $idSessions = array(); // Store session IDs in an array
+                
                 
                 while ($row = $formateurSessionsList->fetch(PDO::FETCH_ASSOC)) {
                     $idSession = $row['ID_SESSION'];
@@ -141,7 +175,10 @@ $idFormateur = $_SESSION['id_formateur'];
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php                                               
+                                                    <?php
+                                                          date_default_timezone_set('GMT');
+                                                          $today = date('Y-m-d'); 
+                                                          echo $today;                                              
                                                           // Student list for the current session
                                                           $idSessionsString = implode(",", $idSessions); // convert the array to a string to use it inside the query 
                                                           $studentListQuery = "SELECT * FROM inscription
@@ -152,12 +189,37 @@ $idFormateur = $_SESSION['id_formateur'];
                                                           $studentList->execute();
                               
                                                         while ($studentRow = $studentList->fetch(PDO::FETCH_ASSOC)) {
+                                                          $idInscription = $studentRow['ID_INSCRIPTION'];
+                
                                                     ?>
                                                             <tr>
                                                                 <td><?= $studentRow['ID_INSCRIPTION'] ?></td>
                                                                 <td><?= $studentRow['ID_APPRENANT'] ?></td>
                                                                 <td><?= $studentRow['NOM_APPRENANT'] ?></td>
-                                                                <td><?= $studentRow['VALIDATION'] ?></td>
+                                                                <?php 
+
+                                                                      if(($studentRow['DATE_FIN_SESSION'] < $today) && $studentRow['VALIDATION'] === null) {
+                                                                          echo 
+                                                                          '<td>
+                                                                           <form action="session-validation.php" method="POST">
+                                                                            <div class="d-flex justify-content-end gap-3">
+                                                                              <input type="hidden" value=" ' . $idInscription .' " name="idInscription">
+                                                                              <input type="text" class="form-control" placeholder="Oui / Non" name="validation" required>
+                                                                              <button type="submit" class="btn btn-danger" name="valider">Confirmer</button>
+                                                                            </div>
+                                                                              
+                                                                           </form>
+                                                                          </td>';
+                                                                          
+                                                                          
+                                                                      }
+                                                                      elseif($studentRow['VALIDATION'] === null){
+                                                                        echo '<td>Bientot en fin de la formation</td>';
+                                                                      } else {
+                                                                        echo '<td> '.$studentRow['VALIDATION'].'</td>';
+                                                                      }
+                                                                ?>
+                                                              
                                                             </tr>
                                                     <?php
                                                         
